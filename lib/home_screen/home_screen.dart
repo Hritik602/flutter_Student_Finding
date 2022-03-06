@@ -27,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
     localNotificationsPlugin.initialize(initializeSetting);
   }
 
+//for user search text
+  String searched = "";
   showNotification() async {
     var androidNotificationDetails = const AndroidNotificationDetails(
         "channelId", "channelName",
@@ -37,26 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final students = StudentDetails.studentDetails;
-  bool searchItem() {
-    var studentsLen = students.length;
-    for (int i = 0; i <= studentsLen; i++) {
-      (searchedItem.text.toUpperCase().codeUnits.length ==
-              students[i].name_students!.codeUnits.length) ||
-          (searchedItem.text.codeUnits[0] ==
-              students[i].roll_no!.toString().codeUnits[0]);
-      return true;
-    }
-    return false;
-  }
 
   // ignore: non_constant_identifier_names
-  student_index() {
-    for (int i = 0; i < students.length; i++) {
-      return i;
-    }
-  }
 
-  final searchedItem = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,11 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
               (StudentDetails.studentDetails.isEmpty) ? 1 : students.length,
           itemBuilder: (context, int index) {
             var student = StudentDetails.studentDetails;
-            return (students[index].name_students!.contains(searchedItem.text))
+            return (students[index]
+                        .name_students!
+                        .toUpperCase()
+                        .contains(searched.toUpperCase()))
                     // ignore: unrelated_type_equality_checks
                     ||
-                    (searchedItem.text.codeUnits[0] ==
-                        student[index].roll_no!.toString().codeUnits[0])
+                    (searched == student[index].roll_no.toString())
                 ? ListTile(
                     leading: const CircleAvatar(
                       radius: 28,
@@ -139,45 +126,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Row customSearchBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        TextField(
-          controller: searchedItem,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none),
-              filled: true,
-              hintText: "Search by Name and Roll No",
-              fillColor: Colors.black12,
-              constraints: const BoxConstraints(maxWidth: 250, maxHeight: 55)),
-        ),
-        InkWell(
-          onTap: () {
-            print(searchItem());
-
-            setState(() {
-              print(student_index());
-            });
-          },
-          child: Container(
-            width: 50,
-            height: 55,
-            decoration: BoxDecoration(
-              color: Colors.black12,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(
-              Icons.search,
-              size: 29,
-              color: Colors.black54,
-            ),
-          ),
-        )
-      ],
+  Widget customSearchBar() {
+    return Center(
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            searched = value;
+          });
+        },
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none),
+            filled: true,
+            hintText: "Search by Name and Roll No",
+            fillColor: Colors.black12,
+            constraints: const BoxConstraints(maxWidth: 250, maxHeight: 55)),
+      ),
     );
   }
 }
