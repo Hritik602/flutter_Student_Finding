@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:newproject/Module/user_details.dart';
+import 'package:newproject/model/user_details.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, required this.userName}) : super(key: key);
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 //for user search text
-  String searched = "";
+  String _searched = "";
   showNotification() async {
     var androidNotificationDetails = const AndroidNotificationDetails(
         "channelId", "channelName",
@@ -77,14 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                searchedView(),
+                _searchedView(),
               ],
             ),
           ),
         )));
   }
 
-  SizedBox searchedView() {
+  SizedBox _searchedView() {
     return SizedBox(
       height: 500,
       child: ListView.separated(
@@ -96,12 +96,12 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (context, int index) {
             var student = StudentDetails.studentDetails;
             return (students[index]
-                        .name_students!
+                        .name!
                         .toUpperCase()
-                        .contains(searched.toUpperCase()))
+                        .contains(_searched.toUpperCase()))
                     // ignore: unrelated_type_equality_checks
                     ||
-                    (searched == student[index].roll_no.toString())
+                    (_searched == student[index].rollNo.toString())
                 ? ListTile(
                     leading: const CircleAvatar(
                       radius: 28,
@@ -116,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     title: Text(
-                      student[index].name_students!.toString(),
+                      student[index].name!.toString(),
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    subtitle: Text("Roll No:${student[index].roll_no}"),
+                    subtitle: Text("Roll No:${student[index].rollNo}"),
                   )
                 : Container();
           }),
@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         onChanged: (value) {
           setState(() {
-            searched = value;
+            _searched = value;
           });
         },
         keyboardType: TextInputType.text,

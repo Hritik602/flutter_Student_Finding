@@ -1,18 +1,18 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:newproject/home_screen/home_screen.dart';
+import 'package:newproject/ui_screens/home_screen.dart';
 
 import 'package:newproject/utility/utility.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   //form key
   final _formKey = GlobalKey<FormState>();
   //controll of useremail and password
@@ -53,81 +53,29 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   //Input field for email
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Card(
-                      elevation: 2.0,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return emailError;
-                          }
-                          setState(() {
-                            userName = value;
-                            userDetails.add(value);
-                          });
-                        },
-                        controller: userEmail,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            focusColor: iconColor,
-                            prefixIcon: emailIcon,
-                            prefixIconColor: iconColor,
-                            labelStyle:
-                                const TextStyle(fontWeight: FontWeight.w900),
-                            filled: false,
-                            fillColor: Colors.black38,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(10)),
-                            labelText: emailLabelText,
-                            constraints: const BoxConstraints(
-                                maxHeight: 80,
-                                minHeight: 35,
-                                maxWidth: 400,
-                                minWidth: 200)),
-                      ),
-                    ),
-                  ),
+                  CustomFormField(
+                      icon: emailIcon,
+                      hintText: emailLabelText,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return emailError;
+                        }
+                        return null;
+                      }),
                   const SizedBox(
                     height: 20,
                   ),
                   //Input field for password
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Card(
-                      elevation: 2.0,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return passworderror;
-                          } else if (value.length < 6) {
-                            return "Paasword length must greater than 6";
-                          }
-                          return null;
-                        },
-                        controller: userPassword,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            focusColor: iconColor,
-                            prefixIcon: emailIcon,
-                            prefixIconColor: iconColor,
-                            labelStyle:
-                                const TextStyle(fontWeight: FontWeight.w900),
-                            filled: false,
-                            fillColor: Colors.black38,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(10)),
-                            labelText: passwordHintText,
-                            constraints: const BoxConstraints(
-                                maxHeight: 80,
-                                minHeight: 35,
-                                maxWidth: 400,
-                                minWidth: 200)),
-                      ),
-                    ),
-                  ),
+                  CustomFormField(
+                      icon: passIcon,
+                      hintText: passwordHintText,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return passworderror;
+                        } else if (value.length < 6) {
+                          return "Paasword length must greater than 6";
+                        }
+                      }),
                   const SizedBox(
                     height: 10,
                   ),
@@ -143,6 +91,46 @@ class _LoginPageState extends State<LoginPage> {
             )),
       ),
     ));
+  }
+}
+
+class CustomFormField extends StatelessWidget {
+  const CustomFormField(
+      {Key? key,
+      required this.validator,
+      required this.icon,
+      required this.hintText})
+      : super(key: key);
+  final String? Function(String?)? validator;
+
+  final Icon? icon;
+  final String? hintText;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Card(
+        elevation: 2.0,
+        child: TextFormField(
+            validator: validator,
+            cursorColor: Colors.black,
+            decoration: InputDecoration(
+                prefixIcon: icon,
+                prefixIconColor: iconColor,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w900),
+                filled: false,
+                fillColor: Colors.black38,
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)),
+                labelText: hintText,
+                constraints: const BoxConstraints(
+                    maxHeight: 80,
+                    minHeight: 35,
+                    maxWidth: 400,
+                    minWidth: 200))),
+      ),
+    );
   }
 }
 
